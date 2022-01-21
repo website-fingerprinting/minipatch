@@ -1,4 +1,4 @@
-## *Minipatch*: Adversarial-based Website Fingerprinting Defense
+## Minipatch: Adversarial-based Website Fingerprinting Defense
 
 ***Minipatch*** is a lightweight defense against DNN-based Website Fingerprinting (WF) attacks, which works by perturbing the network traffic patterns with very few dummy packets.
 ***Minipatch*** involves a patch injection function to preserve the traffic pattern constraints and a patch generation approach that requires only black-box feedback of the target model.
