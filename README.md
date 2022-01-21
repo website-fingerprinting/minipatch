@@ -5,7 +5,7 @@
 The generated adversarial patches are website-oriented and can be pre-computed and applied to real-time traffic.
 More importantly, ***Minipatch*** provides over 97% protection success rate with less than 5% bandwidth overhead, much lower than existing defenses.
 
-<img src="figures/example.png" width="450px">
+<img src="figures/example.png" width="400px">
 
 :warning: ***Note:*** The code is for NON-COMMERCIAL RESEARCH USE ONLY!
 
