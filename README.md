@@ -9,7 +9,7 @@ More importantly, ***Minipatch*** provides over 97% protection success rate with
 
 :warning: ***Note:*** The code is for NON-COMMERCIAL RESEARCH USE ONLY!
 
-### DATASET
+## DATASET
 
 We utilize the publicly available [Sirinam et al.](https://dl.acm.org/doi/10.1145/3243734.3243768)'s dataset and several datasets provided by [Rimmer et al.](https://distrinet.cs.kuleuven.be/software/tor-wf-dl/)
 
@@ -20,7 +20,9 @@ Please download the following datasets:
 
 After downloading, please put the data into `data/Sirinam` and `data/Rimmer` directories, respectively.
 
-### USAGE
+## USAGE
+
+Before starting, please install the required packages in `requirement.txt`.
 
 Use the argument `-h` to get the help message:
 
@@ -70,7 +72,7 @@ optional arguments:
                         per item, 2 = show perturb details.
 ```
 
-### STEP 1: Training Target DNN Models
+## STEP 1: Training Target DNN Models
 
 We challenge the protection performance of ***Minipatch*** against three state-of-the-art DNN-based WF attacks: [AWF](https://distrinet.cs.kuleuven.be/software/tor-wf-dl/), [DF](https://dl.acm.org/doi/10.1145/3243734.3243768), and [Var-CNN](https://www.sciendo.com/article/10.2478/popets-2019-0070).
 We adopt an early stopping strategy and a sufficient maximum number of training epochs to adequately train the model.
@@ -82,7 +84,7 @@ Use the argument `-t` to train a model. For example, to train the DF attack on t
 > python minipatch.py -t -m DF -d Sirinam
 ```
 
-### STEP 2: Generating *Minipatch* Perturbations
+## STEP 2: Generating *Minipatch* Perturbations
 
 Use commands without argument `-t` to generate ***Minipatch*** perturbations.
 
@@ -110,7 +112,7 @@ Use the argument `-vm` to evaluate the perturbation transferability:
 > python minipatch.py -m DF -d Sirinam --patches 8 --inbound 64 --outbound 64 --adaptive --maxiter 30 -vm VarCNN
 ```
 
-### CONTECT US
+## CONTECT US
 
 Feel free to contact us with any questions or feedback about our research.
 
