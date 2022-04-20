@@ -28,6 +28,7 @@ inbound = 64            # [0 1 2 ... 64]
 outbound = 64           # [0 1 2 ... 64]
 adaptive = True         # [True False]
 maxiter = 30            # [30 40 ... 100]
+maxquery = 1e5          # [1e1 1e2 ... 1e7]
 threshold = 1           # [0.9 0.91 ... 1.0]
 polish = True           # [True False]
 
@@ -59,7 +60,7 @@ class Minipatch:
             self.correct = [np.where((self.preds == self.labels) &
                 (site_id == self.labels))[0] for site_id in range(self.num_classes)]
     
-    def perturb(self, num_sites, num_samples, bounds, adaptive, maxiter, threshold, polish, result_file):
+    def perturb(self, num_sites, num_samples, bounds, adaptive, maxiter, maxquery, threshold, polish, result_file):
         """
         Generate perturbation for each website and return all reseults.
         """
@@ -94,11 +95,11 @@ class Minipatch:
             if adaptive:
                 # Perturb with adaptive perturbation bounds
                 result = self.adaptive_tuning(site_id, trace_ids, true_class,
-                            bounds, maxiter, threshold, polish)
+                            bounds, maxiter, maxquery, threshold, polish)
             else:
                 # Get website perturbations
                 result = self.perturb_website(site_id, trace_ids, true_class,
-                            bounds, maxiter, threshold, polish)
+                            bounds, maxiter, maxquery, threshold, polish)
             
             if len(results) == 0:
                 results = result.reset_index(drop=True)
@@ -114,7 +115,7 @@ class Minipatch:
         # Save complete results
         results.to_json('%s.json' % result_file, orient='index')
     
-    def adaptive_tuning(self, site_id, trace_ids, tar_class, bounds, maxiter, threshold, polish):
+    def adaptive_tuning(self, site_id, trace_ids, tar_class, bounds, maxiter, maxquery, threshold, polish):
         """
         Find the best perturbation bounds for the website using binary search.
         """
@@ -132,7 +133,7 @@ class Minipatch:
 
                 # Get website perturbations
                 result = self.perturb_website(site_id, trace_ids, tar_class,
-                    node, maxiter, threshold, polish)
+                    node, maxiter, maxquery, threshold, polish)
                 
                 # Remove unsuccessful node
                 if result['successful'][0] == False:
@@ -175,7 +176,7 @@ class Minipatch:
 
         return results.loc[best_idx:best_idx]
     
-    def perturb_website(self, site_id, trace_ids, tar_class, bounds, maxiter, threshold, polish):
+    def perturb_website(self, site_id, trace_ids, tar_class, bounds, maxiter, maxquery, threshold, polish):
         """
         Generate perturbation for traces of a website.
         """
@@ -198,6 +199,7 @@ class Minipatch:
         perturb_result = dual_annealing(
             objective_func, perturb_bounds,
             maxiter=maxiter,
+            maxfun=maxquery,
             initial_temp=initial_temp,
             restart_temp_ratio=restart_temp_ratio,
             visit=visit,
@@ -308,6 +310,8 @@ if __name__ == '__main__':
         help='Adaptive tuning of patches and bounds for each website.')
     parser.add_argument('--maxiter', type=int, default=maxiter,
         help='The maximum number of iteration.')
+    parser.add_argument('--maxquery', type=int, default=maxquery,
+        help='The maximum number of queries accessing the model.')
     parser.add_argument('--threshold', type=float, default=threshold,
         help='The threshold to determine perturbation success.')
     parser.add_argument('--polish', action='store_true', default=polish,
@@ -336,6 +340,7 @@ if __name__ == '__main__':
         'outbound': args.outbound}
     adaptive = args.adaptive
     optim_maxiter = args.maxiter
+    optim_maxquery = args.maxquery
     success_thres = args.threshold
     optim_polish = args.polish
     verbose = args.verbose
@@ -348,9 +353,9 @@ if __name__ == '__main__':
     if not os.path.exists(result_dir):
         os.makedirs(result_dir)
     
-    result_file = result_dir + '%s_%dpatches_%dinbound_%doutbound_%dmaxiter_%dthreshold%s_%swebsites_%ssamples' % (
+    result_file = result_dir + '%s_%dpatches_%dinbound_%doutbound_%dmaxiter_%dmaxquery_%dthreshold%s_%swebsites_%ssamples' % (
         'adaptive' if adaptive else '', bounds['patches'], bounds['inbound'], bounds['outbound'],
-        optim_maxiter, success_thres * 100, '_polish' if optim_polish else '',
+        optim_maxiter, optim_maxquery, success_thres * 100, '_polish' if optim_polish else '',
         'all' if num_sites == -1 else str(num_sites), 'all' if num_samples == -1 else str(num_samples))
     
     if not os.path.exists('%s.json' % result_file):
@@ -366,7 +371,7 @@ if __name__ == '__main__':
         print('==> Start perturbing websites...')
         minipatch = Minipatch(model, traces, labels, names, verbose)
         minipatch.perturb(num_sites, num_samples, bounds, adaptive,
-            optim_maxiter, success_thres, optim_polish, result_file)
+            optim_maxiter, optim_maxquery, success_thres, optim_polish, result_file)
         
     if verbose > 0:
         print('==> Loading %s model...' % verify_model)

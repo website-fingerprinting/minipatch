@@ -33,7 +33,8 @@ usage: minipatch.py [-h] [-t] [-m MODEL] [-d DATA] [-nw WEBSITES]
                     [-ns SAMPLES] [-vm VERIFY_MODEL] [-vd VERIFY_DATA]
                     [--patches PATCHES] [--inbound INBOUND]
                     [--outbound OUTBOUND] [--adaptive] [--maxiter MAXITER]
-                    [--threshold THRESHOLD] [--polish] [--verbose VERBOSE]
+                    [--maxquery MAXQUERY] [--threshold THRESHOLD] [--polish]
+                    [--verbose VERBOSE]
 
 Minipatch: Undermining DNN-based Website Fingerprinting with Adversarial Patches
 
@@ -65,6 +66,7 @@ optional arguments:
   --adaptive            Adaptive tuning of patches and bounds for each
                         website.
   --maxiter MAXITER     The maximum number of iteration.
+  --maxquery MAXQUERY   The maximum number of queries accessing the model.
   --threshold THRESHOLD
                         The threshold to determine perturbation success.
   --polish              Perform local search at each iteration.
@@ -91,25 +93,25 @@ Use commands without argument `-t` to generate ***Minipatch*** perturbations.
 For example, to generate perturbations comprising a maximum of 8 patches of length up to 64, use the following command:
 
 ```
-> python minipatch.py -m DF -d Sirinam --patches 8 --inbound 64 --outbound 64 --adaptive --maxiter 30
+> python minipatch.py -m DF -d Sirinam --patches 8 --inbound 64 --outbound 64 --adaptive --maxiter 30 --maxquery 10000
 ```
 
 Set the argument `--inbound` to 0 to generate one-way client-side perturbations:
 
 ```
-> python minipatch.py -m DF -d Sirinam --patches 8 --inbound 0 --outbound 64 --adaptive --maxiter 30
+> python minipatch.py -m DF -d Sirinam --patches 8 --inbound 0 --outbound 64 --adaptive --maxiter 30 --maxquery 10000
 ```
 
 Use the argument `-vd` to evaluate the effect of concept drift:
 
 ```
-> python minipatch.py -m DF -d Sirinam --patches 8 --inbound 64 --outbound 64 --adaptive --maxiter 30 -vd 10d
+> python minipatch.py -m DF -d Sirinam -vd 10d --patches 8 --inbound 64 --outbound 64 --adaptive --maxiter 30 --maxquery 10000
 ```
 
 Use the argument `-vm` to evaluate the perturbation transferability:
 
 ```
-> python minipatch.py -m DF -d Sirinam --patches 8 --inbound 64 --outbound 64 --adaptive --maxiter 30 -vm VarCNN
+> python minipatch.py -m DF -d Sirinam -vm VarCNN --patches 8 --inbound 64 --outbound 64 --adaptive --maxiter 30 --maxquery 10000
 ```
 
 ## CONTECT US
