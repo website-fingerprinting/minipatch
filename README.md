@@ -7,6 +7,23 @@ More importantly, ***Minipatch*** provides over 97% protection success rate with
 
 <img src="figures/example.png" width="400px">
 
+#### Reference Format
+```
+@article{LiZCW22,
+  author    = {Ding Li and
+               Yuefei Zhu and
+               Minghao Chen and
+               Jue Wang},
+  title     = {Minipatch: Undermining DNN-Based Website Fingerprinting With Adversarial Patches},
+  journal   = {{IEEE} Transactions on Information Forensics and Security},
+  volume    = {17},
+  number    = {},
+  pages     = {2437-2451},
+  year      = {2022},
+  doi       = {10.1109/TIFS.2022.3186743},
+}
+```
+
 :warning: ***Note:*** The code is for NON-COMMERCIAL RESEARCH USE ONLY!
 
 ## DATASET
